@@ -5,66 +5,57 @@ from sklearn.linear_model import LinearRegression
 
 # ---- Page Config ----
 st.set_page_config(
-    page_title="🚀 Startup Profit Predictor",
-    page_icon="💖",
+    page_title="Startup Profit Predictor",
     layout="wide"
 )
 
-# ---- Custom CSS for Pink Theme ----
+# ---- Custom CSS for classy pastel pink ----
 st.markdown("""
     <style>
-    /* Background Gradient */
     .stApp {
-        background: linear-gradient(120deg, #ffe6f0, #ffb3d9);
+        background: linear-gradient(120deg, #ffeef8, #ffd9e8);
         color: #4d004d;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    /* Title */
-    .css-18e3th9 {
-        color: #99004d;
+    h1, .css-18e3th9 {
+        color: #993366;
         font-weight: bold;
     }
-    /* Subheaders */
     h2 {
-        color: #cc0066;
+        color: #b35980;
     }
-    /* Buttons */
+    input[type=number], div[role="listbox"] > div {
+        background-color:#ffeef8;
+        color:#4d004d;
+        font-weight:bold;
+    }
     div.stButton > button:first-child {
-        background-color: #ff66b3;
+        background-color: #ffb3c6;
         color:white;
         height:3em;
         width:100%;
         border-radius:10px;
         border:none;
-        font-size:18px;
+        font-size:16px;
         font-weight:bold;
     }
     div.stButton > button:hover {
-        background-color:#ff3385;
+        background-color:#ff99b3;
         color:white;
     }
-    /* Input boxes */
-    input[type=number] {
-        background-color:#ffe6f0;
+    .stAlert {
+        background-color:#ffd9e8;
         color:#4d004d;
-        font-weight:bold;
-    }
-    /* Selectbox */
-    div[role="listbox"] > div {
-        background-color:#ffe6f0;
-        color:#4d004d;
-        font-weight:bold;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ---- Title ----
-st.title("💖 Startup Profit Prediction App")
-st.markdown("Enter your startup details below and click **Predict Profit** 💖")
+st.title("🚀 Startup Profit Prediction App")
+st.markdown("Enter your startup details below to predict expected profit 💰")
 
 # ---- Load Dataset ----
 df = pd.read_csv("50_Startups.csv")
-
-# Replace US states with Indian cities
 df["State"] = df["State"].replace({
     "New York": "Bangalore",
     "California": "Mumbai",
@@ -83,12 +74,12 @@ model.fit(X_train, y_train)
 
 # ---- Input Form ----
 with st.form("startup_form"):
-    st.subheader("Enter Startup Details")
-    rnd = st.number_input("💼 R&D Spend (₹)", value=100000.0, step=1000.0)
-    admin = st.number_input("🏢 Administration Spend (₹)", value=50000.0, step=1000.0)
-    marketing = st.number_input("📢 Marketing Spend (₹)", value=50000.0, step=1000.0)
-    city = st.selectbox("🌆 City", ["Bangalore", "Mumbai", "Delhi"])
-    submitted = st.form_submit_button("Predict Profit 💖")
+    st.subheader("Enter Startup Details 🏙️")
+    rnd = st.number_input("R&D Spend (₹)", value=100000.0, step=1000.0)
+    admin = st.number_input("Administration Spend (₹)", value=50000.0, step=1000.0)
+    marketing = st.number_input("Marketing Spend (₹)", value=50000.0, step=1000.0)
+    city = st.selectbox("City", ["Bangalore", "Mumbai", "Delhi"])
+    submitted = st.form_submit_button("Predict Profit 📈")
 
 # ---- Prediction & Output ----
 if submitted:
@@ -102,7 +93,6 @@ if submitted:
     input_df = pd.DataFrame([input_data])
     prediction = model.predict(input_df)[0]
 
-    # Display profit
     st.success(f"💰 Predicted Profit: ₹{prediction:,.2f}")
 
     # Feature Contribution
@@ -112,24 +102,24 @@ if submitted:
         "Contribution": contributions
     })
 
-    # Comparison with average profit
+    # Average profit comparison
     avg_profit = df["Profit"].mean()
     comparison_df = pd.DataFrame({
-        "Category": ["Predicted Profit", "Average Profit"],
+        "Category": ["Predicted Profit 💰", "Average Profit 📊"],
         "Profit": [prediction, avg_profit]
     })
 
-    # ---- Layout with Columns ----
-    st.subheader("Insights 💡")
+    # ---- Columns Layout ----
+    st.subheader("Insights 🔍")
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("### Feature Contribution")
+        st.markdown("### Feature Contribution 📈")
         st.bar_chart(contrib_df.set_index("Feature"), use_container_width=True)
 
     with col2:
-        st.markdown("### Profit Comparison")
+        st.markdown("### Profit Comparison 💹")
         st.bar_chart(comparison_df.set_index("Category"), use_container_width=True)
 
     st.markdown("---")
-    st.markdown("This app uses a **linear regression model** trained on 50 startup data points to estimate profit based on your inputs. 💖")
+    st.markdown("This prediction uses a linear regression model trained on 50 startup datasets to estimate profit based on your inputs.")
