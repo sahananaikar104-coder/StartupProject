@@ -69,4 +69,5 @@ st.subheader("Feature Contribution")
 fig, ax = plt.subplots(figsize=(6,4))
 colors = ['#4CAF50' if val > 0 else '#F44336' for val in contributions]
 ax.barh(contrib_df['Feature'], contrib_df['Contribution'], color=colors)
-ax.set_xlabel("Contribution Amount")_
+ax.set_xlabel("Contribution Amount")
+
