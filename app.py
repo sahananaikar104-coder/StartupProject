@@ -82,3 +82,4 @@ if st.checkbox("Show Correlation Heatmap"):
     fig2, ax2 = plt.subplots(figsize=(8,6))
     sns.heatmap(df_encoded.corr(), annot=True, cmap='coolwarm', ax=ax2)
     st.pyplot(fig2)
+
