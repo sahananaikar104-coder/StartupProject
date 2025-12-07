@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import plotly.express as px
@@ -12,13 +13,23 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ---- Custom CSS ----
+# ---- Custom CSS for Modern UI ----
 st.markdown("""
 <style>
+/* Background Gradient */
 body, .stApp {
     background: linear-gradient(135deg, #e0f7fa, #e1bee7);
 }
 
+/* Card style for sections */
+.stCard {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Button style */
 .stButton>button {
     background: linear-gradient(90deg, #4ade80, #22d3ee);
     color: white;
@@ -31,6 +42,7 @@ body, .stApp {
     background: linear-gradient(90deg, #22d3ee, #4ade80);
 }
 
+/* Input box style */
 .stNumberInput>div>div>input {
     border-radius: 10px;
     border: 1px solid #ccc;
@@ -46,7 +58,6 @@ df["State"] = df["State"].replace({
     "California": "Mumbai",
     "Florida": "Delhi"
 })
-
 df_encoded = pd.get_dummies(df, drop_first=True)
 X = df_encoded.drop("Profit", axis=1)
 y = df_encoded["Profit"]
@@ -96,7 +107,7 @@ with st.container():
             y="Feature",
             orientation='h',
             color="Contribution",
-            color_continuous_scale='Viridis',  # Fixed invalid colorscale
+            color_continuous_scale='Tealgrn',
             title="📈 Feature Contribution",
             text_auto=True
         )
