@@ -3,52 +3,55 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import plotly.express as px
+import time
 
 # ---- Page Config ----
 st.set_page_config(
     page_title="Startup Profit Prediction",
-    page_icon="🚀",
+    page_icon="💎",
     layout="wide",
 )
 
-# ---- Custom CSS (bright + warm colors + high contrast text) ----
+# ---- Custom CSS (modern, classy, pastel/metallic) ----
 st.markdown("""
 <style>
 body, .stApp {
-    background: linear-gradient(135deg, #fff7e6, #ffe0b2);
+    background: linear-gradient(135deg, #f5f7fa, #e0e5ec);  /* subtle metallic pastel */
+    color: #2c2c34;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* Headings brighter */
+/* Headings */
 h1, h2, h3, h4, .stMarkdown {
-    color: #3b2f2f !important;
-    font-weight: 700 !important;
+    color: #1f1f28;
+    font-weight: 700;
 }
 
-/* Buttons - warm + animated */
+/* Buttons - modern metallic pastel gradient + smooth hover */
 .stButton>button {
-    background: linear-gradient(90deg, #ff8a65, #ff7043);
+    background: linear-gradient(90deg, #9b59b6, #8e44ad);
     color: white !important;
     font-size: 18px;
     padding: 10px 25px;
     border-radius: 12px;
     border: none;
-    transition: 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 .stButton>button:hover {
-    transform: scale(1.05);
-    background: linear-gradient(90deg, #ff7043, #ff8a65);
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
 }
 
 /* Input fields */
 input, select, textarea {
     border-radius: 10px !important;
     padding: 8px !important;
-    border: 1px solid #cc8e6f !important;
+    border: 1px solid #b0a4d9 !important;
 }
 
-/* Chart backgrounds */
+/* Plotly chart style */
 .js-plotly-plot .plotly {
-    background-color: rgba(255,255,255,0.7) !important;
+    background-color: rgba(255,255,255,0.85) !important;
     border-radius: 12px;
 }
 </style>
@@ -72,8 +75,8 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 
 # ---- Header ----
-st.markdown("## 🚀 Startup Profit Prediction App")
-st.markdown("Enter your startup details below to predict expected profit 💰")
+st.markdown("<h2 style='text-align:center;'>💎 Startup Profit Prediction App 💎</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center;'>Enter your startup details below to predict expected profit.</p>", unsafe_allow_html=True)
 
 # ---- Inputs ----
 rnd = st.number_input("R&D Spend (₹) 🏗️", value=100000.0)
@@ -82,15 +85,7 @@ marketing = st.number_input("Marketing Spend (₹) 📢", value=50000.0)
 city = st.selectbox("City 🌆", ["Bangalore", "Mumbai", "Delhi"])
 
 # ---- Predict Button ----
-if st.button("✨ Predict Profit ✨"):
-    # Confetti animation
-    st.balloons()
-
-    # Money pop animation (custom HTML)
-    st.markdown("""
-        <h1 style='font-size:40px; text-align:center;'>💸💸💸</h1>
-    """, unsafe_allow_html=True)
-
+if st.button("💎 Predict Profit 💎"):
     # Data for prediction
     input_data = {
         "R&D Spend": rnd,
@@ -100,10 +95,16 @@ if st.button("✨ Predict Profit ✨"):
         "State_Mumbai": 1 if city == "Mumbai" else 0
     }
     input_df = pd.DataFrame([input_data])
-
     prediction = model.predict(input_df)[0]
 
-    st.success(f"💰 Predicted Profit: **₹{prediction:,.2f}**")
+    # ---- Animated Money Pop ----
+    placeholder = st.empty()
+    for i in range(15):
+        placeholder.markdown(f"<h1 style='text-align:center; font-size:{30+i*2}px;'>💰</h1>", unsafe_allow_html=True)
+        time.sleep(0.08)
+    placeholder.empty()  # clear the animation
+
+    st.success(f"💎 Predicted Profit: **₹{prediction:,.2f}** 💎")
 
     # ---- Feature Contribution ----
     contributions = model.coef_ * list(input_df.iloc[0])
@@ -118,8 +119,8 @@ if st.button("✨ Predict Profit ✨"):
         y="Feature",
         orientation='h',
         color="Contribution",
-        color_continuous_scale='Sunset',
-        title="📈 Feature Contribution",
+        color_continuous_scale='Aggrnyl',  # pastel metallic style
+        title="📊 Feature Contribution",
         text_auto=True
     )
     fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
@@ -128,7 +129,7 @@ if st.button("✨ Predict Profit ✨"):
     # ---- Profit Comparison ----
     avg_profit = df["Profit"].mean()
     comparison_df = pd.DataFrame({
-        "Category": ["Average Profit 📊", "Predicted Profit 💰"],
+        "Category": ["Average Profit 📈", "Predicted Profit 💎"],
         "Profit": [avg_profit, prediction]
     })
     fig2 = px.bar(
@@ -136,7 +137,7 @@ if st.button("✨ Predict Profit ✨"):
         x="Category",
         y="Profit",
         color="Category",
-        color_discrete_map={"Average Profit 📊":"#ffcc80","Predicted Profit 💰":"#ff7043"},
+        color_discrete_map={"Average Profit 📈":"#d1c4e9", "Predicted Profit 💎":"#9b59b6"},
         text_auto=True,
         title="💹 Profit Comparison"
     )
