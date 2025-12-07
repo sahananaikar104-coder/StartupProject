@@ -12,19 +12,19 @@ st.set_page_config(
     layout="wide",
 )
 
-# ---- Custom CSS for Modern Pastel Metallic UI ----
+# ---- Custom CSS for Dark Blue & White Theme ----
 st.markdown("""
 <style>
 /* Background gradient */
 body, .stApp {
-    background: linear-gradient(135deg, #f0f4ff, #e6f0ff);
-    color: #1f2937;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
     font-family: 'Helvetica', sans-serif;
 }
 
 /* Headings */
 h1, h2, h3, h4, .stMarkdown {
-    color: #1f2937 !important;
+    color: #f8fafc !important;
     font-weight: 600 !important;
 }
 
@@ -32,17 +32,19 @@ h1, h2, h3, h4, .stMarkdown {
 .stNumberInput>div>div>input, .stSelectbox>div>div>div>div>input {
     border-radius: 12px !important;
     padding: 10px !important;
-    border: 1px solid #a5b4fc !important;
+    border: 1px solid #3b82f6 !important;
+    background-color: white !important;
+    color: black !important;
     transition: 0.2s;
 }
 .stNumberInput>div>div>input:focus, .stSelectbox>div>div>div>div>input:focus {
-    border: 2px solid #6366f1 !important;
-    box-shadow: 0 0 8px rgba(99,102,241,0.4);
+    border: 2px solid #2563eb !important;
+    box-shadow: 0 0 8px rgba(37,99,235,0.4);
 }
 
 /* Buttons */
 .stButton>button {
-    background: linear-gradient(90deg, #6366f1, #818cf8);
+    background: linear-gradient(90deg, #2563eb, #3b82f6);
     color: white !important;
     font-size: 18px;
     font-weight: 600;
@@ -53,22 +55,23 @@ h1, h2, h3, h4, .stMarkdown {
 }
 .stButton>button:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(99,102,241,0.4);
+    box-shadow: 0 4px 15px rgba(37,99,235,0.4);
 }
 
 /* Chart backgrounds */
 .js-plotly-plot .plotly {
-    background-color: rgba(255,255,255,0.8) !important;
+    background-color: rgba(15,23,42,0.85) !important;
     border-radius: 12px;
 }
 
-/* Confetti/Sparkles animation */
+/* Sparkles animation */
 .sparkle {
     position: fixed;
     top: -20px;
     font-size: 18px;
     animation: fall 3s linear infinite;
     z-index: 9999;
+    color: #3b82f6;
 }
 @keyframes fall {
     0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
@@ -95,8 +98,8 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 
 # ---- Header ----
-st.markdown("<h1 style='text-align:center; color:#4f46e5;'> Startup Profit Prediction App </h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center; color:#1f2937;'>Enter your startup details below to predict expected profit.</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center; color:#f8fafc;'>💎 Startup Profit Prediction App 💎</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; color:#e2e8f0;'>Enter your startup details below to predict expected profit.</p>", unsafe_allow_html=True)
 
 # ---- Input Section ----
 col1, col2 = st.columns(2)
@@ -109,10 +112,10 @@ with col2:
 
 # ---- Predict Button ----
 if st.button("Predict Profit"):
-    # Placeholder for loading animation
+    # Loading animation
     placeholder = st.empty()
     for i in range(6):
-        placeholder.markdown(f"<h3 style='text-align:center; color:#818cf8;'>Calculating{'.'*i}</h3>", unsafe_allow_html=True)
+        placeholder.markdown(f"<h3 style='text-align:center; color:#3b82f6;'>Calculating{'.'*i}</h3>", unsafe_allow_html=True)
         time.sleep(0.15)
     placeholder.empty()
 
@@ -127,40 +130,42 @@ if st.button("Predict Profit"):
     input_df = pd.DataFrame([input_data])
     prediction = model.predict(input_df)[0]
 
-    # ---- Sparkles / Confetti animation ----
+    # ---- Sparkles Animation ----
     st.markdown("""
     <div>
-        <div class="sparkle" style="left:5%; color:#6366f1;">✨</div>
-        <div class="sparkle" style="left:25%; color:#818cf8; animation-delay:0.3s;">✨</div>
-        <div class="sparkle" style="left:45%; color:#6366f1; animation-delay:0.6s;">✨</div>
-        <div class="sparkle" style="left:65%; color:#818cf8; animation-delay:0.9s;">✨</div>
-        <div class="sparkle" style="left:85%; color:#6366f1; animation-delay:1.2s;">✨</div>
+        <div class="sparkle" style="left:5%; animation-delay:0s;">✨</div>
+        <div class="sparkle" style="left:25%; animation-delay:0.3s;">✨</div>
+        <div class="sparkle" style="left:45%; animation-delay:0.6s;">✨</div>
+        <div class="sparkle" style="left:65%; animation-delay:0.9s;">✨</div>
+        <div class="sparkle" style="left:85%; animation-delay:1.2s;">✨</div>
     </div>
     """, unsafe_allow_html=True)
 
     # ---- Display Prediction ----
     st.success(f"💎 Predicted Profit: ₹{prediction:,.2f}")
 
-    # ---- Feature Contribution Chart ----
+    # ---- Animated Feature Contribution Chart ----
     contributions = model.coef_ * list(input_df.iloc[0])
     contrib_df = pd.DataFrame({
         "Feature": X.columns,
         "Contribution": contributions
     }).sort_values(by="Contribution", ascending=True)
+    
     fig1 = px.bar(
         contrib_df,
         x="Contribution",
         y="Feature",
         orientation='h',
         color="Contribution",
-        color_continuous_scale=['#6366f1','#818cf8'],
+        color_continuous_scale=['#2563eb', '#3b82f6'],
         title="Feature Contribution",
-        text_auto=True
+        text_auto=True,
+        animation_frame=contrib_df.index
     )
-    fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+    fig1.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)')
     st.plotly_chart(fig1, use_container_width=True)
 
-    # ---- Profit Comparison Chart ----
+    # ---- Animated Profit Comparison Chart ----
     avg_profit = df["Profit"].mean()
     comparison_df = pd.DataFrame({
         "Category": ["Average Profit", "Predicted Profit"],
@@ -171,10 +176,10 @@ if st.button("Predict Profit"):
         x="Category",
         y="Profit",
         color="Category",
-        color_discrete_map={"Average Profit":"#818cf8", "Predicted Profit":"#6366f1"},
+        color_discrete_map={"Average Profit":"#3b82f6", "Predicted Profit":"#2563eb"},
         text_auto=True,
-        title="Profit Comparison"
+        title="Profit Comparison",
+        animation_frame=comparison_df.index
     )
-    fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+    fig2.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)')
     st.plotly_chart(fig2, use_container_width=True)
-
