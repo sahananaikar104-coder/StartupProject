@@ -12,10 +12,9 @@ st.set_page_config(
     layout="wide",
 )
 
-# ---- Custom CSS for Dark Blue & White Theme ----
+# ---- Custom CSS ----
 st.markdown("""
 <style>
-/* Background gradient */
 body, .stApp {
     background: linear-gradient(135deg, #0f172a, #1e293b);
     color: white;
@@ -98,7 +97,7 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 
 # ---- Header ----
-st.markdown("<h1 style='text-align:center; color:#f8fafc;'>💎 Startup Profit Prediction App 💎</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center; color:#f8fafc;'>Startup Profit Prediction App</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align:center; color:#e2e8f0;'>Enter your startup details below to predict expected profit.</p>", unsafe_allow_html=True)
 
 # ---- Input Section ----
@@ -119,7 +118,7 @@ if st.button("Predict Profit"):
         time.sleep(0.15)
     placeholder.empty()
 
-    # Prepare input data
+    # Prepare input
     input_data = {
         "R&D Spend": rnd,
         "Administration": admin,
@@ -142,9 +141,9 @@ if st.button("Predict Profit"):
     """, unsafe_allow_html=True)
 
     # ---- Display Prediction ----
-    st.success(f"💎 Predicted Profit: ₹{prediction:,.2f}")
+    st.success(f"Predicted Profit: ₹{prediction:,.2f}")
 
-    # ---- Animated Feature Contribution Chart ----
+    # ---- Feature Contribution Chart ----
     contributions = model.coef_ * list(input_df.iloc[0])
     contrib_df = pd.DataFrame({
         "Feature": X.columns,
@@ -157,15 +156,14 @@ if st.button("Predict Profit"):
         y="Feature",
         orientation='h',
         color="Contribution",
-        color_continuous_scale=['#2563eb', '#3b82f6'],
+        color_continuous_scale=['#a5b4fc', '#3b82f6'],
         title="Feature Contribution",
-        text_auto=True,
-        animation_frame=contrib_df.index
+        text_auto=True
     )
-    fig1.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)')
+    fig1.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)', font_color='white')
     st.plotly_chart(fig1, use_container_width=True)
 
-    # ---- Animated Profit Comparison Chart ----
+    # ---- Profit Comparison Chart ----
     avg_profit = df["Profit"].mean()
     comparison_df = pd.DataFrame({
         "Category": ["Average Profit", "Predicted Profit"],
@@ -176,10 +174,9 @@ if st.button("Predict Profit"):
         x="Category",
         y="Profit",
         color="Category",
-        color_discrete_map={"Average Profit":"#3b82f6", "Predicted Profit":"#2563eb"},
+        color_discrete_map={"Average Profit":"#a5b4fc", "Predicted Profit":"#3b82f6"},
         text_auto=True,
-        title="Profit Comparison",
-        animation_frame=comparison_df.index
+        title="Profit Comparison"
     )
-    fig2.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)')
+    fig2.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)', font_color='white')
     st.plotly_chart(fig2, use_container_width=True)
