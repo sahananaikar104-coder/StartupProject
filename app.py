@@ -95,7 +95,7 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 
 # ---- Header ----
-st.markdown("<h1 style='text-align:center; color:#4f46e5;'>💎 Startup Profit Prediction App 💎</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center; color:#4f46e5;'> Startup Profit Prediction App </h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align:center; color:#1f2937;'>Enter your startup details below to predict expected profit.</p>", unsafe_allow_html=True)
 
 # ---- Input Section ----
@@ -177,3 +177,4 @@ if st.button("Predict Profit"):
     )
     fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig2, use_container_width=True)
+
