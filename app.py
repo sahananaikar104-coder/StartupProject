@@ -12,9 +12,10 @@ st.set_page_config(
     layout="wide",
 )
 
-# ---- Custom CSS ----
+# ---- Custom CSS for Dark Blue & White Theme ----
 st.markdown("""
 <style>
+/* Background gradient */
 body, .stApp {
     background: linear-gradient(135deg, #0f172a, #1e293b);
     color: white;
@@ -43,7 +44,7 @@ h1, h2, h3, h4, .stMarkdown {
 
 /* Buttons */
 .stButton>button {
-    background: linear-gradient(90deg, #2563eb, #3b82f6);
+    background: linear-gradient(90deg, #2563eb, #22d3ee);
     color: white !important;
     font-size: 18px;
     font-weight: 600;
@@ -54,7 +55,7 @@ h1, h2, h3, h4, .stMarkdown {
 }
 .stButton>button:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(37,99,235,0.4);
+    box-shadow: 0 4px 15px rgba(34,211,238,0.4);
 }
 
 /* Chart backgrounds */
@@ -70,7 +71,7 @@ h1, h2, h3, h4, .stMarkdown {
     font-size: 18px;
     animation: fall 3s linear infinite;
     z-index: 9999;
-    color: #3b82f6;
+    color: #22d3ee;
 }
 @keyframes fall {
     0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
@@ -114,11 +115,11 @@ if st.button("Predict Profit"):
     # Loading animation
     placeholder = st.empty()
     for i in range(6):
-        placeholder.markdown(f"<h3 style='text-align:center; color:#3b82f6;'>Calculating{'.'*i}</h3>", unsafe_allow_html=True)
+        placeholder.markdown(f"<h3 style='text-align:center; color:#22d3ee;'>Calculating{'.'*i}</h3>", unsafe_allow_html=True)
         time.sleep(0.15)
     placeholder.empty()
 
-    # Prepare input
+    # Prepare input data
     input_data = {
         "R&D Spend": rnd,
         "Administration": admin,
@@ -143,27 +144,27 @@ if st.button("Predict Profit"):
     # ---- Display Prediction ----
     st.success(f"Predicted Profit: ₹{prediction:,.2f}")
 
-    # ---- Feature Contribution Chart ----
+    # ---- Feature Contribution Chart with Gradient ----
     contributions = model.coef_ * list(input_df.iloc[0])
     contrib_df = pd.DataFrame({
         "Feature": X.columns,
         "Contribution": contributions
     }).sort_values(by="Contribution", ascending=True)
-    
+
     fig1 = px.bar(
         contrib_df,
         x="Contribution",
         y="Feature",
         orientation='h',
         color="Contribution",
-        color_continuous_scale=['#a5b4fc', '#3b82f6'],
+        color_continuous_scale=['#2563eb', '#22d3ee'],  # Gradient two colors
         title="Feature Contribution",
         text_auto=True
     )
-    fig1.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)', font_color='white')
+    fig1.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)')
     st.plotly_chart(fig1, use_container_width=True)
 
-    # ---- Profit Comparison Chart ----
+    # ---- Profit Comparison Chart with Gradient ----
     avg_profit = df["Profit"].mean()
     comparison_df = pd.DataFrame({
         "Category": ["Average Profit", "Predicted Profit"],
@@ -174,9 +175,9 @@ if st.button("Predict Profit"):
         x="Category",
         y="Profit",
         color="Category",
-        color_discrete_map={"Average Profit":"#a5b4fc", "Predicted Profit":"#3b82f6"},
+        color_discrete_map={"Average Profit": "#2563eb", "Predicted Profit": "#22d3ee"},
         text_auto=True,
         title="Profit Comparison"
     )
-    fig2.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)', font_color='white')
+    fig2.update_layout(plot_bgcolor='rgba(15,23,42,0)', paper_bgcolor='rgba(15,23,42,0)')
     st.plotly_chart(fig2, use_container_width=True)
