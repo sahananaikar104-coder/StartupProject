@@ -8,51 +8,63 @@ import time
 # ---- Page Config ----
 st.set_page_config(
     page_title="Startup Profit Prediction",
-    page_icon="💎",
+    page_icon="🚀",
     layout="wide",
 )
 
-# ---- Custom CSS (modern, classy, pastel/metallic) ----
+# ---- Custom CSS (professional, pastel, modern UI) ----
 st.markdown("""
 <style>
+/* Background */
 body, .stApp {
-    background: linear-gradient(135deg, #f5f7fa, #e0e5ec);  /* subtle metallic pastel */
-    color: #2c2c34;
-    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+    color: #1f2937;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* Headings */
-h1, h2, h3, h4, .stMarkdown {
-    color: #1f1f28;
-    font-weight: 700;
+h1, h2, h3, .stMarkdown {
+    color: #111827;
+    font-weight: 600;
 }
 
-/* Buttons - modern metallic pastel gradient + smooth hover */
+/* Buttons */
 .stButton>button {
-    background: linear-gradient(90deg, #9b59b6, #8e44ad);
-    color: white !important;
-    font-size: 18px;
-    padding: 10px 25px;
-    border-radius: 12px;
+    background: linear-gradient(90deg, #7f9cf5, #b4c6fc);
+    color: #1f2937 !important;
+    font-size: 16px;
+    padding: 12px 28px;
+    border-radius: 8px;
     border: none;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.25s ease-in-out;
 }
 .stButton>button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
 }
 
 /* Input fields */
-input, select, textarea {
-    border-radius: 10px !important;
-    padding: 8px !important;
-    border: 1px solid #b0a4d9 !important;
+.stNumberInput>div>div>input, .stSelectbox>div>div>select {
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    padding: 10px;
+    font-size: 16px;
+    transition: 0.2s;
+}
+.stNumberInput>div>div>input:focus, .stSelectbox>div>div>select:focus {
+    border-color: #7f9cf5;
+    box-shadow: 0 0 5px rgba(127,156,245,0.4);
 }
 
-/* Plotly chart style */
+/* Chart backgrounds */
 .js-plotly-plot .plotly {
-    background-color: rgba(255,255,255,0.85) !important;
+    background-color: rgba(255,255,255,0.9) !important;
     border-radius: 12px;
+}
+
+/* Container spacing */
+section[data-testid="stSidebar"] {
+    padding: 20px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -75,52 +87,54 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 
 # ---- Header ----
-st.markdown("<h2 style='text-align:center;'>💎 Startup Profit Prediction App 💎</h2>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center;'>Enter your startup details below to predict expected profit.</p>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align:center; margin-bottom:10px;'>Startup Profit Prediction</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; color:#374151; margin-bottom:30px;'>Enter your startup's financial details to predict expected profit.</p>", unsafe_allow_html=True)
 
 # ---- Inputs ----
-rnd = st.number_input("R&D Spend (₹) 🏗️", value=100000.0)
-admin = st.number_input("Administration Spend (₹) 🏢", value=50000.0)
-marketing = st.number_input("Marketing Spend (₹) 📢", value=50000.0)
-city = st.selectbox("City 🌆", ["Bangalore", "Mumbai", "Delhi"])
+col1, col2, col3, col4 = st.columns([2,2,2,2])
+with col1:
+    rnd = st.number_input("R&D Spend (₹)", value=100000.0, step=5000.0, format="%.2f")
+with col2:
+    admin = st.number_input("Administration Spend (₹)", value=50000.0, step=5000.0, format="%.2f")
+with col3:
+    marketing = st.number_input("Marketing Spend (₹)", value=50000.0, step=5000.0, format="%.2f")
+with col4:
+    city = st.selectbox("City", ["Bangalore", "Mumbai", "Delhi"])
 
 # ---- Predict Button ----
-if st.button("💎 Predict Profit 💎"):
-    # Data for prediction
+if st.button("Predict Profit"):
+    # Prediction data
     input_data = {
         "R&D Spend": rnd,
         "Administration": admin,
         "Marketing Spend": marketing,
-        "State_Delhi": 1 if city == "Delhi" else 0,
-        "State_Mumbai": 1 if city == "Mumbai" else 0
+        "State_Delhi": 1 if city=="Delhi" else 0,
+        "State_Mumbai": 1 if city=="Mumbai" else 0
     }
     input_df = pd.DataFrame([input_data])
     prediction = model.predict(input_df)[0]
 
-    # ---- Animated Money Pop ----
+    # ---- Animated indicator (modern subtle effect) ----
     placeholder = st.empty()
-    for i in range(15):
-        placeholder.markdown(f"<h1 style='text-align:center; font-size:{30+i*2}px;'>💰</h1>", unsafe_allow_html=True)
-        time.sleep(0.08)
-    placeholder.empty()  # clear the animation
+    for i in range(8):
+        placeholder.markdown(f"<h3 style='text-align:center; color:#7f9cf5;'>Predicting{'.'*i}</h3>", unsafe_allow_html=True)
+        time.sleep(0.1)
+    placeholder.empty()
 
-    st.success(f"💎 Predicted Profit: **₹{prediction:,.2f}** 💎")
+    st.success(f"Predicted Profit: ₹{prediction:,.2f}")
 
     # ---- Feature Contribution ----
     contributions = model.coef_ * list(input_df.iloc[0])
-    contrib_df = pd.DataFrame({
-        "Feature": X.columns,
-        "Contribution": contributions
-    }).sort_values(by="Contribution", ascending=True)
+    contrib_df = pd.DataFrame({"Feature": X.columns, "Contribution": contributions}).sort_values(by="Contribution")
 
     fig1 = px.bar(
         contrib_df,
         x="Contribution",
         y="Feature",
-        orientation='h',
+        orientation="h",
         color="Contribution",
-        color_continuous_scale='Aggrnyl',  # pastel metallic style
-        title="📊 Feature Contribution",
+        color_continuous_scale=["#b4c6fc","#7f9cf5"],
+        title="Feature Contribution",
         text_auto=True
     )
     fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
@@ -129,17 +143,18 @@ if st.button("💎 Predict Profit 💎"):
     # ---- Profit Comparison ----
     avg_profit = df["Profit"].mean()
     comparison_df = pd.DataFrame({
-        "Category": ["Average Profit 📈", "Predicted Profit 💎"],
+        "Category": ["Average Profit", "Predicted Profit"],
         "Profit": [avg_profit, prediction]
     })
+
     fig2 = px.bar(
         comparison_df,
         x="Category",
         y="Profit",
         color="Category",
-        color_discrete_map={"Average Profit 📈":"#d1c4e9", "Predicted Profit 💎":"#9b59b6"},
+        color_discrete_map={"Average Profit":"#b4c6fc","Predicted Profit":"#7f9cf5"},
         text_auto=True,
-        title="💹 Profit Comparison"
+        title="Profit Comparison"
     )
     fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig2, use_container_width=True)
